@@ -192,7 +192,7 @@ const Index = () => {
         </section>
 
         <section id="quick-games" className="py-20 bg-card/50 relative">
-          <div className="container mx-auto px-4">
+          <div className="container px-4 mx-0">
             <div className="text-center mb-12">
               <h2 className="text-5xl font-black mb-4 neon-pink-glow">БЫСТРЫЕ ИГРЫ</h2>
               <p className="text-xl text-foreground/70">Мгновенный азарт и огромные множители</p>
