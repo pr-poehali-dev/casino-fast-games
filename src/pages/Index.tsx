@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import RocketGame from '@/components/RocketGame';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -65,7 +66,7 @@ const Index = () => {
               <h1 className="text-2xl font-black neon-glow">NEON CASINO</h1>
             </div>
             <nav className="hidden md:flex items-center gap-6">
-              {['home', 'games', 'bonuses', 'tournaments', 'rules', 'support'].map((section) => (
+              {['home', 'quick-games', 'games', 'bonuses', 'tournaments', 'rules', 'support'].map((section) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
@@ -74,7 +75,8 @@ const Index = () => {
                   }`}
                 >
                   {section === 'home' && 'Главная'}
-                  {section === 'games' && 'Игры'}
+                  {section === 'quick-games' && 'Быстрые'}
+                  {section === 'games' && 'Рулетка'}
                   {section === 'bonuses' && 'Бонусы'}
                   {section === 'tournaments' && 'Турниры'}
                   {section === 'rules' && 'Правила'}
@@ -114,19 +116,19 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-primary via-secondary to-accent neon-border text-lg px-8 py-6"
-                  onClick={() => scrollToSection('games')}
+                  onClick={() => scrollToSection('quick-games')}
                 >
-                  <Icon name="Play" size={20} className="mr-2" />
-                  Начать играть
+                  <Icon name="Rocket" size={20} className="mr-2" />
+                  Быстрые игры
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
                   className="border-primary/50 hover:bg-primary/20 text-lg px-8 py-6"
-                  onClick={() => scrollToSection('bonuses')}
+                  onClick={() => scrollToSection('games')}
                 >
-                  <Icon name="Gift" size={20} className="mr-2" />
-                  Получить бонус
+                  <Icon name="Play" size={20} className="mr-2" />
+                  Рулетка
                 </Button>
               </div>
               <div className="mt-12 grid grid-cols-3 gap-6 max-w-2xl mx-auto">
@@ -143,6 +145,30 @@ const Index = () => {
                   <div className="text-sm text-foreground/60">Вывод средств</div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="quick-games" className="py-20 bg-card/50 relative">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-5xl font-black mb-4 neon-pink-glow">БЫСТРЫЕ ИГРЫ</h2>
+              <p className="text-xl text-foreground/70">Мгновенный азарт и огромные множители</p>
+            </div>
+            
+            <div className="mb-8">
+              <Tabs defaultValue="rocket" className="w-full">
+                <TabsList className="grid w-full max-w-md mx-auto grid-cols-1 mb-8">
+                  <TabsTrigger value="rocket" className="text-lg">
+                    <Icon name="Rocket" size={20} className="mr-2" />
+                    Ракета 🚀
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="rocket">
+                  <RocketGame />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </section>
