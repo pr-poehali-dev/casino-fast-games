@@ -1,13 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import RocketGame from '@/components/RocketGame';
+import AuthDialog from '@/components/AuthDialog';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+  }, []);
+
+  const handleLogin = (username: string) => {
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    setCurrentUser(null);
+  };
 
   const games = [
     {
@@ -85,10 +105,32 @@ const Index = () => {
               ))}
             </nav>
             <div className="flex items-center gap-3">
-              <Button variant="outline" className="border-primary/50 hover:bg-primary/20">Вход</Button>
-              <Button className="bg-gradient-to-r from-primary via-secondary to-accent neon-border">
-                Регистрация
-              </Button>
+              {currentUser ? (
+                <>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/30">
+                    <Icon name="User" size={18} className="text-primary" />
+                    <span className="font-semibold">{currentUser.username}</span>
+                    <span className="text-sm text-foreground/60">|</span>
+                    <span className="font-bold neon-glow">{currentUser.balance?.toLocaleString()} ₽</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="border-red-500/50 hover:bg-red-500/20 text-red-400"
+                    onClick={handleLogout}
+                  >
+                    <Icon name="LogOut" size={18} className="mr-2" />
+                    Выход
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  className="bg-gradient-to-r from-primary via-secondary to-accent neon-border"
+                  onClick={() => setIsAuthOpen(true)}
+                >
+                  <Icon name="LogIn" size={18} className="mr-2" />
+                  Войти / Регистрация
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -454,6 +496,12 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      <AuthDialog 
+        open={isAuthOpen} 
+        onOpenChange={setIsAuthOpen}
+        onLogin={handleLogin}
+      />
     </div>
   );
 };

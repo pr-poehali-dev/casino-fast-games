@@ -14,7 +14,14 @@ const RocketGame = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [multiplier, setMultiplier] = useState(1.00);
   const [betAmount, setBetAmount] = useState(100);
-  const [balance, setBalance] = useState(10000);
+  const [balance, setBalance] = useState(() => {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.balance || 10000;
+    }
+    return 10000;
+  });
   const [hasActiveBet, setHasActiveBet] = useState(false);
   const [cashedOut, setCashedOut] = useState(false);
   const [cashoutMultiplier, setCashoutMultiplier] = useState(0);
@@ -25,6 +32,30 @@ const RocketGame = () => {
     { multiplier: 1.05, timestamp: Date.now() - 240000 },
     { multiplier: 3.21, timestamp: Date.now() - 300000 },
   ]);
+
+  useEffect(() => {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      const userData = JSON.parse(user);
+      setBalance(userData.balance || 10000);
+    }
+  }, []);
+
+  useEffect(() => {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      const userData = JSON.parse(user);
+      userData.balance = balance;
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+      
+      const users = JSON.parse(localStorage.getItem('casinoUsers') || '[]');
+      const userIndex = users.findIndex((u: any) => u.id === userData.id);
+      if (userIndex !== -1) {
+        users[userIndex].balance = balance;
+        localStorage.setItem('casinoUsers', JSON.stringify(users));
+      }
+    }
+  }, [balance]);
   
   const gameIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
